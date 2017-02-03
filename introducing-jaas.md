@@ -6,8 +6,6 @@ As the language matured and became popular for server-side applications as well,
 
 Like most Java APIs, JAAS is exceptionally extensible. Most of the sub-systems in the framework allow substitution of default implementations so that almost any situation can be handled. For example, an application that once stored user ids and passwords in the database can be changed to use Windows OS credentials. Java’s default, file-based mechanism for configuration of access rights can be swapped out with a system that uses a database to store that information. The incredible flexibility of JAAS and the rest of the security architecture, however, produces some complexity. The fact that almost any piece of the entire infrastructure can be overridden or replaced has major implications for coding and configuration. For example, every application server’s JAAS customizations have a different file format for configuring JAAS, all of which are different from the default one provided by Java[^1].
 
-[^1]: But, we’re Java programmers, we live for that kind of stuff, right?
-
 ## User Access Control
 
 Suppose you’re tasked with writing a web application that allows users to log in with an id and password and then allows the users to view their employment information. Because of the sensitivity of the data, it is important that employees not have access to each other’s data. At this point, the protection logic is not very complex: only let the user that is currently logged in see the information that is mapped to himself. But now add the idea of a manager who may be able to see some of the other employees’ items, such as salary or hiring date. Then add the idea of a human resources administrator. Then an accountant. Or an auditor. The CEO. All these users need access to different information and should not be allowed anything more than necessary.
@@ -16,7 +14,7 @@ Complex security domains like these are where JAAS comes in handy. Additionally,
 
 By the end of this book, you will both understand and use the functionality in JAAS, and also be able to replace many of the pieces provided by the JDK or whatever application server you may be using with your own custom classes. The rest of this chapter covers high levels security concepts, narrowing down to JAAS at the end.
 
-1.2 The Java 2 Security Architecture
+## The Java 2 Security Architecture
 
 The main functionality of the Java 2 security architecture is protecting resources. “Resources” can be anything, but are usually some chunk of data: employee records, databases, or more abstract pieces of data such as class files. The classes in thejava.securitypackage do that work directly by defining the process for testing access permission, and associating permissions with code based on the source from which it was loaded. There are additional subsections and utilities also included in the architecture:
 
@@ -26,49 +24,36 @@ The main functionality of the Java 2 security architecture is protecting resourc
 
 * JAAS, the topic of this book, which performs authentication and authorization.
 
-This work is licensed under a Creative Commons Attribution-NonCommercial 2.5 License:[http://creativecommons.org/licenses/by-nc/2.5/](http://creativecommons.org/licenses/by-nc/2.5/)
+QQQ : image
 
-JAAS in Actionby Coté /www.JAASbook.com/www.DrunkAndRetired.com
-
-1.3 JAAS
+## JAAS
 
 This book is concerned primarily with the lower right box in the diagram above: JAAS. JAAS is a mix of classes specific to JAAS, and classes “borrowed” from other parts of the Java security framework. The primary goal of JAAS is to manage the granting of permissions and performing security checks for those permissions. As such, JAAS is not concerned with other aspects of the Java security framework, such as encryption, digital signatures, or secure connections.
 
 There are several concepts and components that make up JAAS, but all of them revolve around one part: permissions.
 
-1.3.1 Permissions
+### Permissions
 
-Apermissionis a named right to perform some action on a target. For example, one permission might be “all classes in the packagecom.myappcan open sockets to the Internet addresswww.myapp.com.”
+A _permission_ is a named right to perform some action on a target. For example, one permission might be “all classes in the package `com.myappcan` open sockets to the Internet address `www.myapp.com`.”
 
-This work is licensed under a Creative Commons Attribution-NonCommercial 2.5 License:[http://creativecommons.org/licenses/by-nc/2.5/](http://creativecommons.org/licenses/by-nc/2.5/)
+As the example implies, some “entity” is granted a permission. In Java, this entity is usually either a user or a “code base.” Users are a familiar concept, and generally map to a person or process executing code in your application. Users as entities are discussed at length below in the sections on `Subjects` and `Principals`. On the other hand, a code base is a bit more vexing in it’s meaning. A code base is a group of code, usually delineated by a JAR or the URL from which the code was physically loaded. For example, all the classes downloaded as an applet from a remote server could be put into a single code base. Then, because permissions can be applied to code bases, your application could disallow code from that applet from accessing the local file system. You would want to deny access to the local file system to, for example, prevent applets from installing spy- or ad-ware on your machine, or installing viruses. This ability to “sandbox” code, keeping remote, un-trusted code from performing malicious actions, was one of the prime selling points of Java early on.
 
-JAAS in Actionby Coté /www.JAASbook.com/www.DrunkAndRetired.comWho is Granted a Permission?
-
-As the example implies, some “entity” is granted a permission. In Java, this entity is usually either a user or a “code base.” Users are a familiar concept, and generally map to a person or process executing code in your application. Users as entities are discussed at length below in the sections onSubjects andPrincipals. On the other hand, a code base is a bit more vexing in it’s meaning. A code base is a group of code, usually delineated by a JAR or the URL from which the code was physically loaded. For example, all the classes downloaded as an applet from a remote server could be put into a single code base. Then, because permissions can be applied to code bases, your application could disallow code from that applet from accessing the local file system. You would want to deny access to the local file system to, for example, prevent applets from installing spy- or ad-ware on your machine, or installing viruses. This ability to “sandbox” code, keeping remote, un-trusted code from performing malicious actions, was one of the prime selling points of Java early on.
-
-In Java, sub-classes of the abstractjava.security.Permissionclass are used to represent all permissions. There are several types of permissions shipped in the SDK, such asjava.io.FilePermissionfor file access, orjava.net.SocketPermissionfor network access. The special permissionjava.security.AllPermissionserves as a stand-in for any permission. Additionally, you can create any number of custom permissions by extending the class yourself.
+In Java, sub-classes of the abstract `java.security.Permission` class are used to represent all permissions. There are several types of permissions shipped in the SDK, such as `java.io.FilePermission` for file access, or `java.net.SocketPermission` for network access. The special permission `java.security.AllPermission` serves as a stand-in for any permission. Additionally, you can create any number of custom permissions by extending the class yourself.
 
 APermissionis composed of three things, only the first two of which are required:
 
-1. The type ofPermission, implicit in its class-type.  
-   1. ThePermission’s name, generally the target\(s\) thePermissioncontrols. 3. Actions that may be performed on the target.
+1. The type of `Permission`, implicit in its class-type.  
+2. The `Permission`’s name, generally the target\(s\) the `Permission` controls.
+3. Actions that may be performed on the target.
 
-Conceptually, the type and the name of thePermissionspecify what is being accessed. The actions are generally a comma-delimited set of allowed actions. AFilePermissionnamed “pristinebadger.doc” with actions “read, write” would let the possessor read from and write to the file “pristinebadger.doc”. The table below illustrates a 4 more examples:
+Conceptually, the type and the name of thePermissionspecify what is being accessed. The actions are generally a comma-delimited set of allowed actions. A `FilePermission` named “`pristinebadger.doc`” with actions “`read, write`” would let the possessor read from and write to the file “pristinebadger.doc”. The table below illustrates a 4 more examples:
 
-Permission Type
-
-ProfilePermission ProfilePermission DocumentPermission DocumentPermission
-
-Target
-
-All  
- All  
- “Project Avocado”  
- All “programming group” documents
-
-Action
-
-read write read write
+| Permission Type | Target | Action |
+| :--- | :--- | :--- |
+| ProfilePermission | All | read |
+| ProfilePermission | All | write |
+| DocumentPermission | "Project Avocado" | read |
+| DocumentPermission | All "programming group" documents | write |
 
 The actual “allowing” takes place in theboolean implies\( Permission \)method inPermission. When resource access occurs, the resource constructs an instance of the correspondingPermissionclass and passed it to the security framework. The framework then tests if the current security context2has been granted the right\(s\) described by thePermissioninstance. The security framework searches for a permission with the correct type and name. If it finds one, it callsimplieson it, passing in the newly constructed
 
@@ -282,4 +267,6 @@ Finally, the appendixes will go over changes in JAAS in J2SE 5.0, standard J2SEP
 Summary
 
 Our first encounter with security in Java began with the need to provide a secure web application for accessing employee information. With that problem at hand, we started exploring the broad topic of Java security, and narrowed down to the Java Authentication and Authorization Service, or JAAS. We introduced JAAS's primary concepts and classes: permissions, policies, and the service layers needed to enforce the granting of permissions. While we dipped our toe into the code-waters of JAAS, our discussion remained fairly high- level so that we could establish the domain needed to dive into the code.
+
+[^1]: But, we’re Java programmers, we live for that kind of stuff, right?
 
