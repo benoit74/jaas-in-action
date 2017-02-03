@@ -1,6 +1,7 @@
 # Summary
 
 * [Introduction](README.md)
-* [First Chapter](chapter1.md)
 * [Introducing JAAS](introducing-jaas.md)
+  * [User Access Control](introducing-jaas/user-access-control.md)
+  * [The Java 2 Security Architecture](introducing-jaas/the-java-2-security-architecture.md)
 
