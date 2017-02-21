@@ -14,7 +14,7 @@ Stay tuned !
 
 | Chapter | Started on | Ready for review on | Completed on |
 | :--- | :--- | :--- | :--- |
-| 1 | 03 Feb. 2017 |  |  |
+| 1 | 03 Feb. 2017 | 21. Feb 2017 |  |
 | 2 |  |  |  |
 | 3 |  |  |  |
 | 4 |  |  |  |
