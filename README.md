@@ -1,12 +1,14 @@
 # JAAS in Action
 
-This book is a direct adaptation of original work in "JAAS in Action" by Coté : [https://cote.io/jaas-book/](https://cote.io/jaas-book/)
+This book is a direct adaptation of original work in "JAAS in Action" by Coté: [https://cote.io/jaas-book/](https://cote.io/jaas-book/)
 
 This work is licensed under a Creative Commons Attribution-NonCommercial 2.5 License:
 
 [http://creativecommons.org/licenses/by-nc/2.5/](http://creativecommons.org/licenses/by-nc/2.5/)
 
 This is a work in progress.
+
+The companion code is still on GitHub: [https://github.com/cote/jaasbook](https://github.com/cote/jaasbook)
 
 Stay tuned !
 
