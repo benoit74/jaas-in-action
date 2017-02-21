@@ -8,5 +8,5 @@ The main functionality of the Java 2 security architecture is protecting resourc
 
 * JAAS, the topic of this book, which performs authentication and authorization.
 
-QQQ : image
+![](/assets/user-access-control.png)
 
