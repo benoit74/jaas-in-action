@@ -1,15 +1,29 @@
-# My Awesome Book
+# JAAS in Action
 
-This file file serves as your book's preface, a great place to describe your book's content and ideas.
+This book is a direct adaptation of original work in "JAAS in Action" by Coté: [https://cote.io/jaas-book/](https://cote.io/jaas-book/)
 
-This book is a direct adaptation of original work in "JAAS in Action" by Coté : [https://cote.io/jaas-book/](https://cote.io/jaas-book/)
+This work is licensed under a Creative Commons Attribution-NonCommercial 2.5 License:
 
+[http://creativecommons.org/licenses/by-nc/2.5/](http://creativecommons.org/licenses/by-nc/2.5/)
 
+This is a work in progress.
 
+The companion code is still on GitHub: [https://github.com/cote/jaasbook](https://github.com/cote/jaasbook)
 
+Stay tuned !
 
-  
-
+| Chapter | Started on | Ready for review on | Completed on |
+| :--- | :--- | :--- | :--- |
+| 1 | 03 Feb. 2017 |  |  |
+| 2 |  |  |  |
+| 3 |  |  |  |
+| 4 |  |  |  |
+| 5 |  |  |  |
+| 6 |  |  |  |
+| 7 |  |  |  |
+| 8 |  |  |  |
+| 9 |  |  |  |
+| 10 |  |  |  |
 
 
 
