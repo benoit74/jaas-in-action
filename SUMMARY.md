@@ -8,4 +8,5 @@
   * [1.4 JAAS](1-introducing-jaas/1.4-jaas.md)
   * [1.5 Looking ahead](1-introducing-jaas/1.5-looking-ahead.md)
 * [2. Two Quick Examples](2-two-quick-examples.md)
+  * [2.1. A Simple, Cheesy Example](2-two-quick-examples/2.1.-a-simple-cheesy-example.md)
 
